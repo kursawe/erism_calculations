@@ -27,7 +27,7 @@ tol = 1E-14
 """ conditions = Expression((0,0,"bound(x[0],x[1])"), degree=3, tol=tol) """
 
 #create mesh
-N = 250
+N = 471
 mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,4)
 mesh2=RectangleMesh(Point(0,0), Point(Size,Size),N,N)
 # mesh size is smaller near x=y=0
@@ -75,7 +75,7 @@ ds = Measure('ds', subdomain_data=facets) """
 
 
 
-E = Constant(0.350)
+E = Constant(350)
 nu = Constant(0.49)
 mu = E/2/(1+nu)
 lmbda = E*nu/(1+nu)/(1-2*nu)
@@ -112,12 +112,12 @@ for i in range(N+1):
     for j in range(N+1): 
         z[i,j]=p(x_plot[i],y_plot[j],0.) 
 
-np.save('output_real_250.npy', z)
+np.save('output_real_471.npy', z)
 """
 plt.figure()
 plt.pcolormesh(x_plot,y_plot,z)
 plt.colorbar()
-plt.savefig('stressmap_350.png') """
+plt.savefig('stressmap_471.png') """
 print(z)
 
 fig, (ax0, ax1) = plt.subplots(1,2)
@@ -130,7 +130,7 @@ ax1.set_title('The computed Stress')
 fig.colorbar(im2, ax=ax1)
 ax0.set_aspect('equal', adjustable='box')
 ax1.set_aspect('equal', adjustable='box')
-plt.savefig('output_real_250.png')
+plt.savefig('output_real_471.png')
 
 file_results = XDMFFile("stress_calc_real.xdmf")
 file_results.parameters["flush_output"] = True
