@@ -27,8 +27,8 @@ tol = 1E-14
 """ conditions = Expression((0,0,"bound(x[0],x[1])"), degree=3, tol=tol) """
 
 #create mesh
-N = 70
-mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,5)
+N = 250
+mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,4)
 mesh2=RectangleMesh(Point(0,0), Point(Size,Size),N,N)
 # mesh size is smaller near x=y=0
 # mesh size is smaller near z=0 and mapped to a [-1;0] domain along z
@@ -112,7 +112,7 @@ for i in range(N+1):
     for j in range(N+1): 
         z[i,j]=p(x_plot[i],y_plot[j],0.) 
 
-np.save('output_real.npy', z)
+np.save('output_real_250.npy', z)
 """
 plt.figure()
 plt.pcolormesh(x_plot,y_plot,z)
@@ -130,7 +130,7 @@ ax1.set_title('The computed Stress')
 fig.colorbar(im2, ax=ax1)
 ax0.set_aspect('equal', adjustable='box')
 ax1.set_aspect('equal', adjustable='box')
-plt.savefig('output_real.png')
+plt.savefig('output_real_250.png')
 
 file_results = XDMFFile("stress_calc_real.xdmf")
 file_results.parameters["flush_output"] = True
