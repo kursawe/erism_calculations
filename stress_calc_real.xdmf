@@ -4,18 +4,18 @@
   <Domain>
     <Grid Name="TimeSeries" GridType="Collection" CollectionType="Temporal">
       <Grid Name="mesh" GridType="Uniform">
-        <Topology NumberOfElements="1500000" TopologyType="Tetrahedron" NodesPerElement="4">
-          <DataItem Dimensions="1500000 4" NumberType="UInt" Format="HDF">stress_calc_real.h5:/Mesh/0/mesh/topology</DataItem>
+        <Topology NumberOfElements="5324184" TopologyType="Tetrahedron" NodesPerElement="4">
+          <DataItem Dimensions="5324184 4" NumberType="UInt" Format="HDF">stress_calc_real.h5:/Mesh/0/mesh/topology</DataItem>
         </Topology>
         <Geometry GeometryType="XYZ">
-          <DataItem Dimensions="315005 3" Format="HDF">stress_calc_real.h5:/Mesh/0/mesh/geometry</DataItem>
+          <DataItem Dimensions="1113920 3" Format="HDF">stress_calc_real.h5:/Mesh/0/mesh/geometry</DataItem>
         </Geometry>
         <Time Value="0" />
         <Attribute Name="displacement" AttributeType="Vector" Center="Node">
-          <DataItem Dimensions="315005 3" Format="HDF">stress_calc_real.h5:/VisualisationVector/0</DataItem>
+          <DataItem Dimensions="1113920 3" Format="HDF">stress_calc_real.h5:/VisualisationVector/0</DataItem>
         </Attribute>
         <Attribute Name=" stress" AttributeType="Scalar" Center="Node">
-          <DataItem Dimensions="315005 1" Format="HDF">stress_calc_real.h5:/VisualisationVector/1</DataItem>
+          <DataItem Dimensions="1113920 1" Format="HDF">stress_calc_real.h5:/VisualisationVector/1</DataItem>
         </Attribute>
       </Grid>
     </Grid>
