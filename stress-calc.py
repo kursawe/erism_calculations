@@ -97,7 +97,7 @@ L = dot(f, v)*dx + dot(T, v)*ds
 
 # Compute solution
 u = Function(V, name="displacement")
-solve(a == L, u, bcs, solver_parameters={'linear_solver':'lu'})
+solve(a == L, u, bcs, solver_parameters={'linear_solver':'mumps'})
 
 print()
 p.assign(-project(sigma(u)[2, 2], V2))
