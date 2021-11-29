@@ -1,3 +1,4 @@
+import cv2
 from fenics import *
 from ufl import nabla_div
 import numpy as np
@@ -5,9 +6,11 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from scipy import interpolate
 
+
 im=Image.open('NCB_Fig3_Displacement.tif')
 #Scaling due to units (1000 nm = 1 µm)
 displ=0.001*np.array(im)
+blur=cv2.GaussianBlur(displ,(5,5),0)
 
 im2=Image.open('NCB_Fig3a_Stress.tif')
 stress=np.array(im2)
@@ -18,20 +21,20 @@ y=np.linspace(0,Size, num=472)
 y_rev=np.linspace(Size,0, num=472)
 X,Y = np.meshgrid(x,y)
 #interpolate the Displacement Image to a continous function
-interpolator=interpolate.interp2d(x,y_rev,displ, kind="cubic")
+interpolator=interpolate.interp2d(x,y_rev,blur, kind="cubic")
 tol = 1E-14 
 
 
 #create mesh
-N = 200
+N = 100
 mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,30)
 
 # mesh size is smaller near z=0 and mapped to a [-8.5;0] domain along z
 mesh.coordinates()[:, 2] = -8.5*(mesh.coordinates()[:, 2]**2)
 
 #Define Functionspaces
-V = VectorFunctionSpace(mesh, 'P', 1)
-V2 = FunctionSpace(mesh, "CG", 1)
+V = VectorFunctionSpace(mesh, 'P', 2)
+V2 = FunctionSpace(mesh, "CG", 2)
 
 p = Function(V2, name=" stress")
 
@@ -82,7 +85,7 @@ L = dot(f, v)*dx + dot(T, v)*ds
 
 # Compute solution
 u = Function(V, name="displacement")
-solve(a == L, u, bcs, solver_parameters={'linear_solver':'mumps', 'preconditioner' :'ilu'})
+solve(a == L, u, bcs, solver_parameters={'linear_solver':'gmres', 'preconditioner' :'ilu'})
 
 #alternative Code for the solving of the system with adaptive mesh (doesn't work!!)
 """ M=sigma(u)[2, 2]*dx()
@@ -123,7 +126,7 @@ for i in range(N+1):
         z[i,j]=p(x_plot[i],y_plot[j],0.) 
 
 #save the array
-np.save('output_deep200.npy', z)
+np.save('output_100_quad.npy', z)
 print(z)
 
 #Plot Comparison of Displacement Map to Stress Map
@@ -137,7 +140,7 @@ ax1.set_title('The computed Stress')
 fig.colorbar(im2, ax=ax1)
 ax0.set_aspect('equal', adjustable='box')
 ax1.set_aspect('equal', adjustable='box')
-plt.savefig('output_deep200.png')
+plt.savefig('output_100_quad.png')
 
 
 #Possible XDMF output for Paraview
