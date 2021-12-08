@@ -1,4 +1,4 @@
-import cv2
+
 from fenics import *
 from ufl import nabla_div
 import numpy as np
@@ -10,10 +10,10 @@ from scipy import interpolate
 im=Image.open('NCB_Fig3_Displacement.tif')
 #Scaling due to units (1000 nm = 1 µm)
 displ=0.001*np.array(im)
-blur=cv2.GaussianBlur(displ,(5,5),0)
+#blur=cv2.GaussianBlur(displ,(5,5),0)
 
-im2=Image.open('NCB_Fig3a_Stress.tif')
-stress=np.array(im2)
+im3=Image.open('NCB_Fig3a_Stress.tif')
+stress=np.array(im3)
 
 Size=76.464
 x=np.linspace(0,Size, num=472)
@@ -21,16 +21,28 @@ y=np.linspace(0,Size, num=472)
 y_rev=np.linspace(Size,0, num=472)
 X,Y = np.meshgrid(x,y)
 #interpolate the Displacement Image to a continous function
-interpolator=interpolate.interp2d(x,y_rev,blur, kind="cubic")
+interpolator=interpolate.interp2d(x,y_rev,displ, kind="cubic")
 tol = 1E-14 
 
 
 #create mesh
 N = 100
-mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,30)
+mesh=BoxMesh(Point(0,0,0), Point(Size,Size,1),N,N,2)
 
+print(mesh.coordinates()[:, 2])
+number=int((mesh.coordinates()[:, 2].shape[0])/3)
+
+print(number)
 # mesh size is smaller near z=0 and mapped to a [-8.5;0] domain along z
-mesh.coordinates()[:, 2] = -8.5*(mesh.coordinates()[:, 2]**2)
+new_coord=-1.67*np.ones(number)
+mesh.coordinates()[:, 2] = -8.5*(mesh.coordinates()[:, 2])
+mesh.coordinates()[:, 2][number:((number*2))]=new_coord
+
+""" print(number)
+print(mesh.coordinates()[:, 2].shape)
+print(mesh.coordinates()[:, 2][number-1])
+print(mesh.coordinates()[:, 2][number:((number*2))])
+print(mesh.coordinates()[:, 2][(number*2)]) """
 
 #Define Functionspaces
 V = VectorFunctionSpace(mesh, 'P', 2)
@@ -126,7 +138,7 @@ for i in range(N+1):
         z[i,j]=p(x_plot[i],y_plot[j],0.) 
 
 #save the array
-np.save('output_100_quad.npy', z)
+np.save('output_quad.npy', z)
 print(z)
 
 #Plot Comparison of Displacement Map to Stress Map
@@ -140,7 +152,7 @@ ax1.set_title('The computed Stress')
 fig.colorbar(im2, ax=ax1)
 ax0.set_aspect('equal', adjustable='box')
 ax1.set_aspect('equal', adjustable='box')
-plt.savefig('output_100_quad.png')
+plt.savefig('output_quad.png')
 
 
 #Possible XDMF output for Paraview
